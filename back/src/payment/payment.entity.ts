@@ -9,13 +9,13 @@ export class Payment {
   @ManyToOne(() => User, user => user.payments, { eager: true })
   user!: User;
 
-  @Column()
+  @Column('decimal')
   amount!: number;
 
   @Column()
   currency!: string;
 
-  @Column()
+  @Column({ type: 'enum', enum: ['student_subscription', 'teacher_monthly_fee'] })
   type!: 'student_subscription' | 'teacher_monthly_fee';
 
   @Column({ default: 'pending' })

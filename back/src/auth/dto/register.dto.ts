@@ -19,6 +19,6 @@ export class RegisterDto {
   @MinLength(6)
   password!: string;
 
-  @IsIn(['admin', 'teacher', 'student'])
-  role!: 'admin' | 'teacher' | 'student';
+  @IsString()
+  role!: string;
 }

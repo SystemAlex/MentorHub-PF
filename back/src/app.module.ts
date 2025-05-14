@@ -9,7 +9,7 @@ import { User } from './users/user.entity';
 import { Class } from './classes/class.entity';
 import { Submission } from './submission/submission.entity';
 import { Task } from './task/task.entity';
-import { PaymentsModule } from './payment/payment.module';
+import { PaymentsModule } from './payment/payments.module';
 import { Payment } from './payment/payment.entity';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/user.module';

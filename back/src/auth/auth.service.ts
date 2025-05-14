@@ -11,10 +11,10 @@ import { compare, hash } from 'bcrypt';
 export class AuthService {
   constructor(
     @InjectRepository(User) private usersRepository: Repository<User>,
-    private jwtService: JwtService
+    private jwtService: JwtService,
   ) {}
 
-  async register(registerDto: RegisterDto): Promise<any> {
+  async register(registerDto: RegisterDto): Promise<{ token: string }> {
     const { fullName, email, phoneNumber, country, password, role } = registerDto;
     const hashedPassword = await hash(password, 10);
 
@@ -33,7 +33,7 @@ export class AuthService {
     return { token };
   }
 
-  async login(loginDto: LoginDto): Promise<any> {
+  async login(loginDto: LoginDto): Promise<{ token: string }> {
     const { email, password } = loginDto;
     const user = await this.usersRepository.findOne({ where: { email } });
 

@@ -1,12 +1,12 @@
-import { IsNumber, IsEnum, IsString } from 'class-validator';
+import { IsNumber, IsString, IsEnum } from 'class-validator';
 
 export class CreatePaymentDto {
   @IsNumber()
-  amount: number = 0;
+  amount!: number;
 
   @IsString()
-  currency: string = '';
+  currency!: string;
 
   @IsEnum(['student_subscription', 'teacher_monthly_fee'])
-  type: 'student_subscription' | 'teacher_monthly_fee' = 'student_subscription';
+  type!: 'student_subscription' | 'teacher_monthly_fee';
 }
