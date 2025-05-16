@@ -1,0 +1,27 @@
+name: Deploy to AWS via SSM
+on:
+  push:
+    branches: [ main ]  # Cambia a tu rama principal
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: sa-east-1  # Región de tu instancia
+
+      - name: Run deploy.ps1 via SSM
+        run: |
+          aws ssm send-command \
+            --region sa-east-1 \
+            --instance-ids "i-0490c921bc6b29acf" \
+            --document-name "AWS-RunPowerShellScript" \
+            --parameters '{"commands":["cd C:/Users/Administrator/repositories/MentorHub-PF", "./deploy.ps1"]}'
+        
+      - name: Verify deployment
+        run: |
+          echo "Despliegue iniciado. Verifica los logs en tu instancia EC2."

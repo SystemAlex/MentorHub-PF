@@ -10,6 +10,7 @@ import {
 } from 'typeorm';
 import { User } from '../users/user.entity';
 import { Task } from '../task/task.entity';
+import { Category } from '../entities/categorias.entities'; 
 
 @Entity()
 export class Class {
@@ -32,6 +33,10 @@ export class Class {
   @OneToMany(() => Task, (task) => task.classRef)
   tasks!: Task[];
 
+  @ManyToOne(() => Category, (category) => category.classes)
+  category!: Category; // <--- esta línea soluciona el error
+
   @CreateDateColumn()
   createdAt!: Date;
 }
+
