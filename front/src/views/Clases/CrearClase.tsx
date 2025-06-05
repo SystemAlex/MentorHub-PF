@@ -3,6 +3,8 @@ import { ImageIcon, Video, Paperclip } from "lucide-react";
 import axiosInstance from "../../services/axiosInstance";
 import type { CategoryType } from "../../types/CategoryType";
 import type { MateriaType } from "../../types/MateriaType";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 export default function CrearClase() {
   const [title, setTitle] = useState("");
@@ -15,9 +17,12 @@ export default function CrearClase() {
   const [allMaterias, setAllMaterias] = useState<MateriaType[]>([]);
   const [multimedia, setMultimedia] = useState<File[]>([]);
 
+  const [suscripcionActiva, setSuscripcionActiva] = useState(false);
+
   const imageInputRef = useRef<HTMLInputElement>(null);
   const videoInputRef = useRef<HTMLInputElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     axiosInstance.get(`/categories`).then((res) => {
@@ -28,6 +33,41 @@ export default function CrearClase() {
     });
     const storedUser = JSON.parse(localStorage.getItem("user") || "{}");
     if (storedUser.id) setTeacherId(storedUser.id);
+
+    // CHEQUEA SI EL PROFESOR TIENE SUSCRIPCIÓN ACTIVA
+    if (storedUser?.role === "teacher") {
+      axiosInstance
+        .get(`/payments/user/${storedUser.id}?page=1&limit=3`)
+        .then((res) => {
+          const pagos = res.data?.data || [];
+          const ahora = new Date();
+            interface PagoType {
+            status: string;
+            endDate: string;
+            [key: string]: any;
+            }
+
+            const pagoActivo = (pagos as PagoType[]).find((p: PagoType) => {
+            if (p.status !== "completed") return false;
+            const endDate: Date = new Date(p.endDate);
+            return endDate > ahora;
+            });
+          if (pagoActivo) {
+            setSuscripcionActiva(true);
+            // RESETEA EL CONTADOR SI TIENE SUSCRIPCIÓN ACTIVA
+            localStorage.setItem("clases_creadas", "0");
+          } else {
+            setSuscripcionActiva(false);
+            // Inicializa el contador solo si no existe
+            if (!localStorage.getItem("clases_creadas")) {
+              localStorage.setItem("clases_creadas", "0");
+            }
+          }
+        })
+        .catch(() => {
+          setSuscripcionActiva(false);
+        });
+    }
   }, []);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -37,8 +77,26 @@ export default function CrearClase() {
     }
   };
 
+  // LIMITE DE CLASES SOLO SI NO TIENE SUSCRIPCIÓN ACTIVA
+  const checkLimiteClases = () => {
+    const storedUser = JSON.parse(localStorage.getItem("user") || "{}");
+    if (storedUser?.role === "teacher" && !suscripcionActiva) {
+      let clases = parseInt(localStorage.getItem("clases_creadas") || "0");
+      if (clases >= 1) {
+        alert("Para crear más de una clase debes suscribirte. Serás redirigido a la suscripción.");
+        toast.warning("Para crear más de una clase debes suscribirte. Serás redirigido a la suscripción.");
+        setTimeout(() => {
+          navigate("/suscripcion");
+        }, 1500);
+        return false;
+      }
+    }
+    return true;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!checkLimiteClases()) return;
     const token = localStorage.getItem("token");
     if (!token) {
       alert("No estás autenticado.");
@@ -68,8 +126,13 @@ export default function CrearClase() {
       setDescription("");
       setCategoryId("");
       setMateriaId("");
-      
       setMultimedia([]);
+      // SOLO SUMA EL CONTADOR SI NO TIENE SUSCRIPCIÓN ACTIVA
+      const storedUser = JSON.parse(localStorage.getItem("user") || "{}");
+      if (storedUser?.role === "teacher" && !suscripcionActiva) {
+        let clases = parseInt(localStorage.getItem("clases_creadas") || "0");
+        localStorage.setItem("clases_creadas", String(clases + 1));
+      }
     } catch (err) {
       alert("Error al crear la clase");
       console.error(err);
@@ -176,7 +239,6 @@ export default function CrearClase() {
               setDescription("");
               setCategoryId("");
               setMateriaId("");
-              
               setMultimedia([]);
             }}
           >
