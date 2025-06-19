@@ -72,7 +72,7 @@ import { TextToSpeechController } from './text-to-speech/text-to-speech.controll
             Review,
          ],
          synchronize: true,
-         dropSchema: true, 
+         dropSchema: false, 
       }),
    ],
    controllers: [TextToSpeechController], // Controlador de text-to-speech

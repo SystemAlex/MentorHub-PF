@@ -7,33 +7,54 @@ import { useNavigate } from "react-router-dom";
 const texts = [
   <div className="h-full flex flex-col justify-between gap-[1.7vh]">
     <p className="text-center">
-      ¿Buscas <strong>crecer profesionalmente</strong> pero no sabes por dónde empezar?
+      ¿Buscas <strong>crecer profesionalmente</strong> pero no sabes por dónde
+      empezar?
     </p>
     <p className="text-center">
-      En <strong>MentorHub</strong> conectamos a profesionales como tú con <strong>mentores expertos</strong> que te guiarán paso a paso hacia el éxito.
+      En <strong>MentorHub</strong> conectamos a profesionales como tú con
+      <strong> mentores expertos</strong> que te guiarán paso a paso hacia el
+      éxito.
     </p>
     <span className="mx-auto">
-      <p>✅ <strong>Mentores verificados</strong> en diversas industrias.</p>
-      <p>✅ <strong>Sesiones personalizadas</strong> adaptadas a tus metas.</p>
-      <p>✅ <strong>Red de apoyo</strong> para impulsar tu desarrollo.</p>
+      <p>
+        ✅ <strong>Mentores verificados</strong> en diversas industrias.
+      </p>
+      <p>
+        ✅ <strong>Sesiones personalizadas</strong> adaptadas a tus metas.
+      </p>
+      <p>
+        ✅ <strong>Red de apoyo</strong> para impulsar tu desarrollo.
+      </p>
     </span>
     <p className="text-center">
-      <strong>Únete hoy</strong> y da el primer paso hacia el futuro que mereces.
+      <strong>Únete hoy</strong> y da el primer paso hacia el futuro que
+      mereces.
     </p>
   </div>,
   <div className="h-full flex flex-col justify-between gap-[1.7vh]">
-    <p className="text-center"><strong>¿Por qué elegir MentorHub?</strong></p>
+    <p className="text-center">
+      <strong>¿Por qué elegir MentorHub?</strong>
+    </p>
     <span className="mx-auto">
-      <p>🌟 <strong>Aprendizaje práctico:</strong> Deja atrás la teoría y enfócate en lo que realmente funciona.</p>
-      <p>📈 <strong>Resultados comprobados:</strong> Miles de profesionales ya aceleraron su carrera con nosotros.</p>
-      <p>💡 <strong>Flexibilidad total:</strong> Agenda sesiones cuando mejor te convenga.</p>
+      <p>
+        🌟 <strong>Aprendizaje práctico:</strong> Deja atrás la teoría y
+        enfócate en lo que realmente funciona.
+      </p>
+      <p>
+        📈 <strong>Resultados comprobados:</strong> Miles de profesionales ya
+        aceleraron su carrera con nosotros.
+      </p>
+      <p>
+        💡 <strong>Flexibilidad total:</strong> Agenda sesiones cuando mejor te
+        convenga.
+      </p>
     </span>
     <p className="text-[4.73vh] text-center">
-      ¡No esperes más! <strong>Encuentra a tu mentor ideal</strong> y lleva tu carrera al siguiente nivel.
+      ¡No esperes más! <strong>Encuentra a tu mentor ideal</strong> y lleva tu
+      carrera al siguiente nivel.
     </p>
   </div>,
 ];
-
 const transitionTime = 25;
 const radius = 45;
 
@@ -50,14 +71,13 @@ const Landing: React.FC = () => {
     if (user) {
       navigate("/panel");
     }
-
     const interval = setInterval(() => {
       setProgress((prev) => (prev >= transitionTime ? 0 : prev + 1));
     }, 1000);
 
     const textInterval = setInterval(() => {
       setCurrent((prev) => (prev === texts.length - 1 ? 0 : prev + 1));
-      setProgress(0);
+      setProgress(0); // Reiniciar barra de progreso
     }, transitionTime * 1000);
 
     return () => {
@@ -79,15 +99,12 @@ const Landing: React.FC = () => {
   if (user) return null;
 
   return (
-    <div className="w-screen h-screen flex flex-col-reverse lg:flex-row items-center justify-center overflow-hidden">
-      
-   
-      <div className="w-full lg:w-1/2 h-full flex flex-col justify-start p-6 lg:p-0">
-        <h1 className="title text-center leading-none pt-[6vh] lg:pt-[9vh]">MentorHub</h1>
+    <div className="w-screen h-screen flex items-center justify-end overflow-hidden">
+      <div className="w-full h-full flex flex-col justify-start">
+        <h1 className="title text-center leading-none pt-[9vh]">MentorHub</h1>
         <h2 className="subtitle text-center z-10">
           Conectamos Mentores con Mentes Curiosas
         </h2>
-
         <div className="h-full flex flex-col justify-between gap-[1.7vh] panel-text leading-tight">
           <div className="relative h-full overflow-hidden">
             <div className="absolute top-0 left-0 w-5 h-5 text-center">
@@ -112,7 +129,9 @@ const Landing: React.FC = () => {
                   strokeWidth="10"
                   fill="none"
                   strokeDasharray={circumference}
-                  strokeDashoffset={circumference - (progress / transitionTime) * circumference}
+                  strokeDashoffset={
+                    circumference - (progress / transitionTime) * circumference
+                  }
                   className="transition-all duration-1000"
                   strokeLinecap="round"
                 />
@@ -130,14 +149,12 @@ const Landing: React.FC = () => {
               </div>
             ))}
           </div>
-
           <a
             className="w-fit bg-[#007AFF] text-white mx-auto py-3 px-6 rounded-full hover:bg-white hover:text-[#007AFF] border-2 border-[#007AFF]"
             href="/register"
           >
             Regístrate gratis en MentorHub
           </a>
-
           <p className="text-center">
             ¿Ya tienes una cuenta?{" "}
             <a
@@ -149,20 +166,14 @@ const Landing: React.FC = () => {
           </p>
         </div>
       </div>
-
-      
-      <div className="hidden lg:flex w-full lg:w-1/2 h-full">
-        <Background>
-          <MenVir
-            src="/MenVir_Saludando.webm"
-            videoRef={videoRef}
-            onEnded={handleVideoEnd}
-            loop={false}
-          />
-        </Background>
-      </div>
-
-      
+      <Background>
+        <MenVir
+          src="/MenVir_Saludando.webm"
+          videoRef={videoRef}
+          onEnded={handleVideoEnd}
+          loop={false}
+        />
+      </Background>
       <div className="absolute inset-0 flex flex-col items-center justify-center panel"></div>
     </div>
   );
